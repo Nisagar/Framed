@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: #FDFBF0;
+    color: #2a3828;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-brand-primary text-brand-bg px-6 py-3 font-body font-medium text-sm tracking-wide
+           transition-all duration-200 hover:bg-brand-dark active:scale-95
+           shadow-btn rounded-none;
+  }
+
+  .btn-outline {
+    @apply border border-brand-primary text-brand-primary px-6 py-3 font-body font-medium text-sm
+           tracking-wide transition-all duration-200 hover:bg-brand-primary hover:text-brand-bg
+           active:scale-95 rounded-none;
+  }
+
+  .btn-ghost {
+    @apply text-brand-primary px-4 py-2 font-body font-medium text-sm tracking-wide
+           transition-all duration-200 hover:bg-brand-cream active:scale-95;
+  }
+
+  .card {
+    @apply bg-white shadow-card hover:shadow-card-hover transition-shadow duration-300;
+  }
+
+  .input-field {
+    @apply w-full border border-brand-border bg-white px-4 py-3 text-sm font-body
+           text-brand-dark placeholder-brand-muted focus:outline-none focus:border-brand-primary
+           transition-colors duration-200 rounded-none;
+  }
+
+  .section-title {
+    @apply font-display text-4xl md:text-5xl font-light text-brand-dark leading-tight;
+  }
+
+  .section-subtitle {
+    @apply font-body text-brand-muted text-sm tracking-widest uppercase;
+  }
+
+  .skeleton {
+    @apply bg-brand-cream animate-skeleton rounded;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #FDFBF0;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #9aab95;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #465940;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
