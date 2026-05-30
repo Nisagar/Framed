@@ -1,7 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
-// Shipping: free if 2+ total items, else ₹99
 const SHIPPING_CHARGE = 99
 const FREE_SHIPPING_THRESHOLD = 2
 
@@ -16,30 +15,43 @@ export const useCartStore = create(
       items: [],
 
       addItem(product, size, quantity = 1) {
-        const key = `${product.id}-${size}`
-        const items = get().items
-        const existing = items.find(i => i.key === key)
+        // For custom posters, each upload is unique — never merge them
+        const key = product.isCustom
+          ? `custom-${Date.now()}-${Math.random().toString(36).slice(2)}`
+          : `${product.id}-${size}`
 
-        if (existing) {
-          set({
-            items: items.map(i =>
-              i.key === key ? { ...i, quantity: i.quantity + quantity } : i
-            ),
-          })
-        } else {
-          set({
-            items: [...items, {
-              key,
-              productId: product.id,
-              title: product.title,
-              price: product.price,
-              image: product.images?.[0]?.url || product.image_url,
-              size,
-              quantity,
-              slug: product.slug,
-            }],
-          })
+        const items = get().items
+
+        // For regular products, merge if same key exists
+        if (!product.isCustom) {
+          const existing = items.find(i => i.key === key)
+          if (existing) {
+            set({
+              items: items.map(i =>
+                i.key === key ? { ...i, quantity: i.quantity + quantity } : i
+              ),
+            })
+            return
+          }
         }
+
+        set({
+          items: [...items, {
+            key,
+            productId:      product.id,
+            title:          product.title,
+            price:          product.price,
+            image:          product.images?.[0]?.url || product.image_url,
+            size,
+            quantity,
+            slug:           product.slug,
+            // Custom poster fields
+            isCustom:       product.isCustom       || false,
+            customImageUrl: product.customImageUrl || null,
+            storagePath:    product.storagePath    || null,
+            customNotes:    product.customNotes    || null,
+          }],
+        })
       },
 
       removeItem(key) {
@@ -78,7 +90,6 @@ export const useCartStore = create(
     }),
     {
       name: 'framed-cart',
-      // Only persist items array
       partialize: (state) => ({ items: state.items }),
     }
   )
